@@ -39,7 +39,8 @@
 - 将自己本地的项目初始化成 git 仓库 ，执行 `git init` 命令
 - 执行 add 和 commit 命令（这是简写需要自己补充）
 - 去网上你的空仓库复制代码，第一个提示框的最后两行
-  `git remote add origin https://github.com/swim-SpongeBob/first_demo.git 执行命令作用： 给本地的仓库添加一个远端地址，名称叫 origin 地址是 后面的地址 git push -u origin master 将版本上传到已经添加的远端 origin` -执行完毕之后上传成功 ，想要修改的话，直接在本地仓库修改然后执行上传三部曲即可
+  `git remote add origin https://github.com/swim-SpongeBob/first_demo.git` 执行命令作用： 给本地的仓库添加一个远端地址，名称叫 origin 地址是 后面的地址`git push -u origin master 将版本上传到已经添加的远端 origin`
+- 执行完毕之后上传成功 ，想要修改的话，直接在本地仓库修改然后执行上传三部曲即可
 
 #### 使用 ssk-key 秘钥
 
@@ -62,3 +63,4 @@
 #### 注意
 
 - 仓库不能嵌套仓库
+- 测试
