@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul>
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+    </ul>
+    <div id="myDiv"></div>
+    <input type="text" />
+    <button>搜索</button>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+      //const let 变量的声明方式  替代 var
+      //   let num = 100;
+      //   num++;
+      //   console.log(num);
+
+      // let const 和 var 的不同
+      //不能重复声明
+      //   let num1 = 100;
+      //   let num1 = 1000;
+      //   console.log(num1);
+
+      //没有声明提升
+      //   consle.log(num1);
+      //   var num1 = 1000;
+
+      //存在块级作用域
+      //let 定义index 会出错，显示index未定义
+      //   for (let index = 0; index < 10; index++) {}
+      //   console.log(index);
+
+      //   if (10 > 5) {
+      //     var num = 100;
+      //   }
+      //   console.log(num);
+
+      //   let num;
+      //   if (10 > 5) {
+      //     num = 100;
+      //   }
+      //   console.log(num);
+
+      //   //三目
+      //   let num = 10 > 5 ? 100 : 0;
+      //   console.log(num);
+      // 以上三个结果一样
+
+      //   const obj = {
+      //     username: "貂蝉",
+      //     userage: 18,
+      //     level: 10,
+      //   };
+      //   const username = obj.username
+      //   const userage = obj.userage
+      //使用的时候 选择使用 username 变量 ， 还是 obj.username
+      // obj.username 不适合反复使用
+      // {}内为对象，const { username, userage } = obj;这种写法为结构赋值,{}内没顺序要求。
+      //  userage: age 换名方式
+      //   const { username, userage: age } = obj;
+      //   console.log(username, userage);
+
+      //   const arr =[1,2,3,4,5]
+      //   const [a,b,c] = arr
+      //   console.log(a,b,c)
+
+      //   const str= 'hello vue'
+      //   const [d,e,f] = str
+      //   console.log(d,e,f)
+      //结果为 hel
+
+      //   function showInfo(username, level) {
+      //     console.log(`该英雄的名称是${username}`, `等级${level}`);
+      //   }
+      //   showInfo(username, level);
+
+      //   function showInfo(obj) {
+      //     console.log(`该英雄的名称是${obj.username}`, `等级${obj.level}`);
+      //   }
+      //   showInfo(obj);
+
+      //   function showInfo({ username, level }) {
+      //     //{username,level} 等于 const { username, userage: age } = obj
+      //     console.log(`该英雄的名称是${username}`, `等级${level}`);
+      //   }
+      //   showInfo(obj);
+      //   // 以上三种方式结果一样
+
+      //   let x = 1;
+      //   let y = 2;
+      //   [x, y] = [y, x];
+      //实现变量的调换
+
+      //   const num = 100
+      //   num++
+
+      //     const obj = {
+      //         name: '吕布',
+      //         age:28
+      //     }
+      //     obj.level = 15
+      //为什么num会报错而下面的level就不会报错？
+      //因为obj属于对象，属于引用类型，修改时地址不会发生改变。而num属于值，修改时会发生改变。
+      //   对象属于引用类型，字符串、布尔值、数字属于值的类型。
+
+      //字符串的方法
+      //   indexOf  charAt includes startsWith endsWith
+      //trim trimStart trimEnd match matchAll padStart padEnd replace
+
+      // const str = 'hello 2020'
+      // console.log(str.startsWith('h'))
+
+      //lodash 插件 包含了所有的基础数据的处理方式
+
+      //函数的扩展
+
+      //函数的创建
+      //   const fun = function () {};
+      //   function fun1() {}
+
+      //函数的默认参数
+      //   const fun = function (color, bgColor) {
+      //     // 写好默认值
+      //     // 判断是否存在然后设置成默认值
+      //     console.log("颜色", color);
+      //     console.log("背景色", bgcolor);
+      //     //修改高亮
+      //   };
+      //   fun("黑色", "红色");
+
+      //   const fun = function (color = "黑色", bgColor = "红色") {
+      //     console.log("颜色", color);
+      //     console.log("背景色", bgcolor);
+      //     //修改高亮
+      //   };
+      //   fun("蓝色");
+
+      //   const fun = function (obj) {
+      //     console.log("颜色", obj.color);
+      //     console.log("背景色", obj.bgcolor);
+      //     //修改高亮
+      //   };
+      //   fun({ color: "蓝色", bgColor: "黑色" });
+
+      //   const fun = function ({ color = "黑色", bgColor = "蓝色" }) {
+      //     console.log("颜色", color);
+      //     console.log("背景色", bgcolor);
+      //     //修改高亮
+      //   };
+      //   fun({ color: "粉色" });
+
+      //剩余参数
+      //   function add(a,b,c,d){
+      //       console.log(a+b+c+d)
+      //   }
+      //   add(1,2,3,4)
+
+      //add里面写多少个数都可以进行求和
+      // function add(a, b, c, d) {
+      //   // console.log([...arguments])
+      //   [...arguments].forEach(function (ele) {
+      //     console.log(ele);
+      //   });
+      //   // 类数组 ---> 数组
+
+      //   console.log(a + b + c + d);
+      // }
+      // add(1, 2, 3, 4, 5, 6, 7, 8);
+
+      // function add(a, ...rest) {
+      //   console.log(rest);
+      // }
+      // add(1, 2, 3, 4, 5, 6);
+
+      //箭头函数
+
+      // function add(num1,num2){
+      //   return num1+num2
+      // }
+      //箭头函数定义只能变量式定义
+      //箭头左边是 函数的参数部分 使用()包裹参数，逗号拼接，当参数只有一个的时候省略()小括号。
+      //箭头右边是 函数的主题 使用{} ,返回值设置依然使用 return, 当函数不需要操作就设置返回值的话可以省略{}和return 直接写返回值即可
+      //箭头左边属于参数，箭头右侧属于操作内容，要干什么
+      // const add = (num1,num2) => num1+num2
+      // const res = add(10,20)
+      // console.log(res)
+
+      // const arr = [1,1,1,2,3,5,4,45,34,23,2,342,2]
+      // //找到数组内第一个大于 20 的元素
+      // // find findeIndex
+      // const currentEle=arr.find(function(ele){
+      //   return ele >20
+      // })
+      // console.log(currentEle)
+
+      // const currentEle=arr.find(ele => ele >20)
+      // console.log(currentEle)
+      //箭头函数和普通函数的区别 (主要是写法上的区别)
+
+      //函数内的 this 指向
+      // var username = "window";
+      // function xx() {
+      //   var username = "locla";
+      //   console.log(this.username); //window
+      // }
+      // xx();
+
+      // var obj = {
+      //   name: "lily",
+      //   say: function () {
+      //     console.log(this.name); //lily
+      //   },
+      // };
+      // obj.say();
+
+      // var obj = {
+      //   name: "lily",
+      //   //这say的作用域是全局的
+      //   say: () => {
+      //     console.log(this); //Window
+      //     console.log(this.name); //空
+      //   },
+      // };
+      // obj.say();
+      //什么时候使用箭头函数，神魔时候使用普通函数
+
+      // 数组的扩展
+
+      // const fun1 = function () {
+      //   console.log(arguments);
+      //   console.log(Array.from(arguments));
+      // };
+      // fun1(1, 2, 3, 4, 5, 6);
+
+      // console.log($("ul li"));
+      // console.log(document.getElementsByTagName("ul li"));
+
+      // const obj = {
+      //   "0": 12312,
+      //   "1": 98798,
+      //   length: 2,
+      //   //随便
+      // };
+      // console.log(obj);
+      // console.log(Array.from(obj));
+
+      // const str = "1,2,3,4,5";
+      // const num1 = 11;
+      // const num2 = 111;
+      // const num3 = 111;
+      // const num4 = 112;
+      // console.log(Array.of(num1, num2, num3, num4));
+
+      //多维数组  [1,2,[3,4]]
+      //将多维数组转化为一维数组可以使用 flat 只能平一层
+      //flatMap() 先对数组进行 map 生成新的数组，然后对得到的数组进行一次 flat
+
+      // const arr = [1, 2, 3];
+      // const newArr = arr.map(ele => ele * ele);
+      // console.log(newArr); //[1, 4, 9]
+
+      // const arr = [1, 2, [3,4]];
+      //   const newArr = arr.flatMap(ele => ele * ele);
+      //   console.log(newArr);
+
+      //扩展运算符
+
+      // const obj = {
+      //   name: "庄周",
+      //   age: "18",
+      // };
+      //拷贝这个对象
+      // 1. for in 遍历对象， 向新对象添加
+      // 2. Object.assjgn
+      // 3. jquery 的 extend
+      // 4. 扩展运算符
+      // const obj1 = { ...obj };
+      // obj1.hobby = "浪";
+      // console.log(obj, obj1); // obj: {name: "庄周", age: "18"}
+      // // obj1:{name: "庄周", age: "18", hobby: "浪"}
+
+      // const arr = [1, 2, 3];
+      // const arr1 = [...arr];
+      // arr1.push(4);
+      // console.log(arr, arr1); //[1, 2, 3]  [1, 2, 3, 4]
+
+      //构造函数
+      // function Hero(name, age) {
+      //   this.name = name;
+      //   this.age = age;
+      // }
+      // Hero.prototype.say = function () {
+      //   console.log("我是王者荣耀的英雄" + this.name);
+      // };
+      // const a = new Hero("妲己", 18);
+      // a.say(); //我是王者荣耀的英雄 妲己
+      // const b = { ...a };
+      // b.say(); //is not a function
+
+      // 对象的扩展
+
+      //对象的简洁表示法
+      //原写法
+      // const username = "哈哈";
+      // const userage = 20;
+      // const obj = {
+      //   username: username,
+      //   userage: userage,
+      // };
+      // console.log(obj); //{username: "哈哈", userage: 20}
+
+      //现写法
+      // const username = "哈哈";
+      // const userage = 20;
+      // const obj = {
+      //   username,
+      //   //当对象的属性名和作为该属性的属性值的变量名相同时，就可以省略
+      //   userage,
+      //   //函数可以省略 function , 前提是为普通函数
+      //   say() {},
+      // };
+      // console.log(obj); //{username: "哈哈", userage: 20, say: ƒ}
+
+      // const obj1 = {
+      //   xx: 100,
+      //   xxx: 1,
+      //   xxxx: 10000,
+      // };
+      // console.log(Object.values(obj1)); // [100, 1, 10000]
+      // const a = "xx";
+      // console.log(obj1[a + "x"]); // 1
+
+      //第七种数据类型 Symbol
+      // let s1 = Symbol("foo"); //引号里面的值是对 Symbol 的描述
+      // let s2 = Symbol("foo");
+      // const s3 = s1 + "哈哈哈";
+      // console.log(s3); // 运行错误
+      // console.log(s1, s2); // Symbol(foo) Symbol(foo)
+      // console.log(s1 === s2); // flase
+
+      //创建 参数是数组
+      // const ary = new Set([1, 2, 131, 312, 1, 2, 131]);
+      // console.log(ary); //Set(4) {1, 2, 131, 312}
+      // //不可随便访问
+      // //属性
+      // //size 获取 set 数组的长度
+      // console.log(ary.size); // 4
+
+      // //方法
+      // //add() 向 set 数组内添加一个成员 ,返回Set数据本身
+      // ary.add(10000);
+      // console.log(ary); // Set(5) {1, 2, 131, 312, 10000}
+      // //delete()  删除某个值，返回一个布尔值，表示删除是否成功。
+      // //clear()   清除所有成员，没有返回值。
+      // //has()   返回一个布尔值，查看该值是否为Set的成员。
+
+      // //如何将set 数据转化为数组
+      // console.log([...ary]); // (5) [1, 2, 131, 312, 10000]
+      // //可以实现数组去重
+      // const newArr = [1, 2, 131, 312, 1, 2, 131];
+      // console.log([...new Set(newArr)]); // (4) [1, 2, 131, 312]
+
+      //Set 小应用
+
+      //搜索历史展示
+      //北京 南京 北京
+      // const arr = []
+      //输入地址之后点击搜索，当我下次进入搜索界面的时候以前的搜索内容还在
+      //1. const arr = new Set() 定义数组
+      //2. arr.add(输入的地址)
+      //3. 展示使用 [...arr] 展示即可
+
+      // weakset
+      // const ary1 = new WeakSet([
+      //   [1, 2],
+      //   [1, 2],
+      // ]);
+      // console.log(ary1); // WeakSet {Array(2), Array(2)}
+
+      // const arr = [1, 2];
+      // const ary1 = new WeakSet([arr, arr]);
+      // console.log(ary1); // WeakSet {Array(2)}
+
+      //Map
+      // const data = {};
+      // const element = document.getElementById("myDiv");
+      // console.log(element); // <div id="myDiv"></div>
+      // data[element] = "metadata";
+      // console.log(data); // {[object HTMLDivElement]: "metadata"}
+
+      //class (构造函数加原型的简化)
+      //构造函数和原型
+      // function Hero(name, age) {
+      //   this.name = name;
+      //   this.age = age;
+      // }
+      // Hero.prototype.say = function () {
+      //   console.log("我是王者荣耀的英雄" + this.name);
+      // };
+
+      class Hero {
+        // 类的 {} 内只能写方法，默认一般只写方法，而且方法之间不需要逗号
+        // constructor 是class 自带函数， 该函数被称作构造器和以前的构造函数类似
+        // constructor 函数当 船舰实例化类的时候会自动触发
+        // 如果不需要 constructor 可以省略
+        constructor(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+        //除了 constructor 函数之外定义的函数都相当于原来的 prototype 内的方法
+        // say() {
+        //   console.log("我是王者荣耀的英雄" + this.name);
+        // }
+        say = () => {
+          console.log("我是王者荣耀的英雄" + this.name);
+        };
+      }
+      // const a = new Hero("牛", 20);
+      // const b = new Hero("小乔", 18);
+      // console.log(a); //Hero {name: "牛", age: 20}
+      // console.log(b); //Hero {name: "小乔", age: 18}
+      // a.say();
+
+      //class 的继承 （ 继承方式： extends 继承 super 调用 ） extends 为继承的意思
+      class CarryHero extends Hero {
+        constructor(name, age) {
+          //super() 调用了才真正实现了继承
+          super(name, age);
+        }
+      }
+      const c = new CarryHero("赵云", 19);
+      console.log(c); // CarryHero {name: "赵云", age: 19, say: ƒ}
+
+      //模块   ------webpack (模块打包器) webpack 是非常庞大的一个打包器
+      //promise 异步解决方案    以后会讲
+
+      // 一些高级的js语法浏览器不支持。
+      // 用一些工具去编译es6 ---->es3 es5
+    </script>
+  </body>
+</html>
