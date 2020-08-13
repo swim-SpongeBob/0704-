@@ -423,7 +423,61 @@ console.log(c); // CarryHero {name: "赵云", age: 19, say: ƒ}
 
 - 将 js 文件夹的名字改成 src， 保证项目的根目录有 src ，并且 src 下存在 index.js 。还有 index.js 是页面的主要用的 js
 
-- 执行编译打包命令`npx webpack`，执行成功后会将 index.js 打包编译到项目下的 dist 文件夹下的 main.js
+- 执行编译打包命令`npx webpack`，执行成功后会将 src 下 index.js 打包编译到项目下的 dist 文件夹下的 main.js
+
 - 页面导入打包好的 main.js
+
+- 上面是使用了 webpack 的默认配置进行的打包，可以在项目根目录下新建 `webpack.config.js` 文件，当作 webpack 编译的配置文件，参考网址 `https://www.webpackjs.com/guides/getting-started/#%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%AA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6` 复制基本的配置到该文件内，
+
+- 一直敲编译命令很繁琐，可以使用 package.json 中的 scripts 字段配置 '快捷键', 使用 `npm run 名` 快捷执行
+
+###### module
+
+导入两种方式
+
+- 默认导入
+
+  ```js
+  // 默认导入 导入的名称可以和导出不一致，import 后面的 常量 不带{}
+  import x from "./about";
+  ```
+
+- 命名导入
+
+  ```js
+  //命名导入 名字必须和导出一致 可以使用as换名, import 后面的 常量 带{}
+  import { a } from "./about";
+  import { a as x, b } from "./about";
+  import xxx, { a as x, b } from "./about";
+  ```
+
+- 全部导入
+
+  ```js
+  // 全部导入，不管是默认的还是命名的 obj 内存在的所有导出
+  import * as obj from "./about";
+  ```
+
+导出两种方式
+
+- 默认导出
+
+  ```js
+  // 默认导出a  可以随意导出（函数fur 对象{} 数组[]）只能使用一次
+  export default a;
+  export default c;
+  ```
+
+- 命名导出
+
+  ```js
+  // 命名导出
+  // 可以使用多次
+  // 默认导出和命名导出可以同时存在
+  export { a, b };
+  export const a = 100;
+  export { a };
+  export { b };
+  ```
 
 #### typescirpt

@@ -64,3 +64,10 @@ npm 就是下载 node 包的工,下载方式有三种:
   ```
       npm config set loglevel=http
   ```
+
+##### node 模块语法
+
+前端模块分类 核心模块 第三方模块 自定义模块
+
+- 模块语法分为 模块导入 require('包名') 前两中模块直接写包名 自定义模块需要写路径
+- 模块语法分为 模块导出 module.exports = 值
