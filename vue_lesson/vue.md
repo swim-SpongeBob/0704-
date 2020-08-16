@@ -30,4 +30,231 @@
 
 vue 项目创建的就是单页面应用，整个项目就在一个页面内，(弊端：首页访问的会比较慢等等)[单页面](https://www.jianshu.com/p/0c32c85c668b)
 
-##### vue 基础
+#### vue 基础
+
+##### 组件
+
+整个 vue 项目就是由各种各样的组件组合而成的，组件可以理解成我们原来排版的的某一个结构部分，app.vue 组件是项目的最外层结构，在 vue 项目中最简单的组件写法就是以 vue 为后缀名的文件，组件名称一般首字母大写，多个字母使用大驼峰方式。
+
+如何划分组件，其实就是和之前画盒子一样
+vue 后缀的组件构成：
+
+- html 部分，使用 template 标签表示，里面写 html 结构即可，也可以嵌入其他的组件，需要注意的是 template 标签只能有一个子级
+- script 组件的 js 部分，自己页面的逻辑处理，其他组件的注册
+- style 组件的 css 部分，默认的样式是全局的
+
+##### main.js 讲解
+
+```js
+// 导入 vue
+import Vue from "vue";
+// 导入 最大组件app
+import App from "./App.vue";
+//Vue 项目的配置，去掉生产版本提示
+// 现在是开发阶段，看不到打包之后的代码，打包之后的代码被托管到服务器上，所以我们可以通过访问服务器地址访问我们的项目
+Vue.config.productionTip = false;
+
+// 创建 vue 实例，添加 rander 配置，作用是需要渲染的组件
+// 实例创建好之后，使用实例的 $mount 方法将实例挂载到页面的 #app 结构内
+new Vue({
+  render: (h) => h(App),
+}).$mount("#app");
+```
+
+##### 整理初始项目(删除一些内容)，写 hello world
+
+App.vue 只剩下
+
+```vue
+<template>
+  <div id="app">
+    hello world
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+};
+</script>
+
+<style></style>
+```
+
+删除 HelloWord 组件
+
+##### 组件的样式
+
+组件的样式基本上都是全局的，因为只有一个页面，所有的组件都会渲染到一个页面
+
+- 在 style 标签上加上 scoped 属性，使组件样式私有化
+- 在 style 标签上加上 lamg 属性，可以设置使用高级 css 扩展语法
+
+##### 组件的嵌套
+
+- 现在父组件内导入子组件
+- 在父组件内的导出对象内使用 comoponents 属性先注册子组件
+
+  ```js
+  export default {
+    name: "App",
+    components: {
+      Header,
+    },
+  };
+  ```
+
+- 在父组件的 template 内直接使用组件名称的标签即可
+
+##### 组件的复用技巧 props
+
+基础的 props 使用
+
+当一个组件需要在很多个组件内使用，而且多多少少显示的内容不一样，其实是需要根据组件所在的位置进行轻微的修改，此时就可以借助 vue 内的 props 知识点处理。
+父组件嵌套子组件的时候，希望子组件要根据父组件的想法修改一些内容。
+
+###### props 的使用
+
+- 在父组件内，直接当作自定义属性传递即可
+
+```html
+<!-- 方式一 -->
+<button text="Download Now" color="#00f" />
+<!-- 方式二 -->
+<button text="Download Now" :isActive="true" />
+```
+
+- 在子组件内，选哟使用导出对象下的 props 属性接收
+
+  - 方式一数组
+    ```js
+    export default {
+      name: "Button",
+      props: ["text", "color"],
+    };
+    ```
+  - 方式二对象
+    ```js
+    export default {
+      name: "Button",
+      // 接收的收使用的是字符串
+      // props: ["text", "isActive"],
+      // 对象方式 高级可以做简单的校验
+      props: {
+        text: {
+          // 可以设置属性的类型和默认值
+          type: String,
+          default: "default button",
+        },
+        isActive: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    };
+    ```
+
+- 接收完毕之后需要在 template 中使用，使用方式分为两大类
+
+  - 在标签的双尖括号之间使用，直接用双花括号嵌套 props 名称即可，使用{{text}}
+
+    ```js
+    <button class="btn">{{ text }}</button>
+    ```
+
+  - 在标签的属性内使用需要使用 vue 指令 `v-bind` 也可以直接省略使用 `:`
+
+    ```html
+    <!-- .在标签的属性内使用需要将属性写成 v-bind:style='`background-color: ${color}`' 引号内就可以写 js 语法 -->
+    <!-- 语法就是 v-bind:属性名="`这里面直接写 js 语法即可`" v-bind: 可以简写成: -->
+    <button v-bind:style="`background-color: ${color}`"></button>
+    ```
+
+##### vue 的模板语法
+
+我们在介绍 props 的时候就已经使用了 vue 的模板语法，在 template 中嵌入 js ，
+分为两大类：
+
+- 在标签的双尖括号之间使用，直接用双花括号嵌套 props 名称即可，使用{{text}}
+
+  ```js
+  <button class="btn">{{ text }}</button>
+  ```
+
+- 在标签的属性内使用需要使用 vue 指令 `v-bind` 也可以直接省略使用 `:`
+
+  ```html
+  <!-- .在标签的属性内使用需要将属性写成 v-bind:style='`background-color: ${color}`' 引号内就可以写 js 语法 -->
+  <!-- 语法就是 v-bind:属性名="`这里面直接写 js 语法即可`" v-bind: 可以简写成: -->
+  <button v-bind:style="`background-color: ${color}`"></button>
+  ```
+
+##### vue 组件的 data
+
+只要是组件的 html 内容(结构，样式)发生改变的话，那么这个改变必须由 data 内的某个 数据 控制，
+
+使用方法：
+
+- data 的设置， 需要将变化对应的内容设置成 data
+  ```js
+  export default {
+  name: "App",
+  data: function() {
+    return {
+      bgColor: "red",
+    };
+  },
+  ...
+  ...
+  }
+  ```
+- data 的使用
+  - 在 template 中使用直接当成变量，使用模板语法写到标签内即可
+  - 在 script 内使用的时候要用 `this.名` 访问
+- data 的修改
+  - 在 template 中的函数内直接对 data 赋值即可
+  - 在 script 函数内使用 `this.名` 重新赋值，这种比较常用
+
+##### vue 组件内的事件绑定
+
+直接使用 v-on 指令绑定事件，也可以简写成 @
+
+```js
+ <button @click="change" class="change">切换颜色</button>
+//  <button v-on:click="change" class="change">切换颜色</button>
+```
+
+- change 是一个函数名，该函数必须声明在组件导出的对象下的 methods 属性内，注意的是：这里的函数在 template 内使用的时候直接使用方法名，儿子啊 script 中使用的时候需要使用 `this.方法名`
+
+```js
+export default {
+  name: "App",
+  data: function () {
+    return {
+      bgColor: "red",
+    };
+  },
+  // 组件注册
+  components: {
+    // Header: Header,
+    Header,
+    Main,
+  },
+  methods: {
+    // 该对象下的属性需要写成函数，这个函数可以直接当作事件函数
+    change() {
+      this.bgColor = "blue";
+    },
+  },
+};
+```
+
+###### 小问题
+
+- gitbash 不可用，使用 powershell 运行 `vue ui` 提示
+
+```
+  无法加载文件 C:\Users\sunnyzz\AppData\Roaming\npm\vue.ps1,因为在此系统上禁止运行脚本，有关详细信息，请参阅 http:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies
+```
+
+以管理员身份打开命令行输入 `Set-ExecutionPolicy RemoteSigned` 然后输入 Y，再次运行 vue ui 即可
