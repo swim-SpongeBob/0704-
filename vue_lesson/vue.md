@@ -249,6 +249,178 @@ export default {
 };
 ```
 
+##### 自定义事件
+
+父组件向子组件传递函数需要自定义事件，其实也可以直接使用 props
+
+父组件内
+语法：@自定义事件名称='父组件内的函数名称'
+
+```js
+// 第一种方式是直接将函数传递过去
+<Button @change='change' />
+// 第二种方式是将带参数的函数传递过去
+<Button @change='change(index)' />
+```
+
+子组件内
+
+js 内
+
+```js
+export default {
+  name: "Span",
+  props: ["text", "isActive"],
+  methods: {
+    handleMouseenter() {
+      // 调用父组件的自定义事件并传参
+      // 传参的方式在父组件内直接传递也可以在子组件内传递
+
+      //接收父组件的函数并调用
+      this.$emit("change");
+
+      // 这是传参调用
+      this.$emit("change", 4);
+    },
+  },
+};
+```
+
+html 内
+
+```html
+<span :class="isActive ? 'active' : ''">{{ text }}</span>
+```
+
+自定义事件有一个修饰符 .natiive 该修饰符的作用就是将自定义事件直接绑定在子组件的根元素标签上，但是这类自定义事件名称必须和原生事件名称相同
+
+```js
+// 直接给子组件 Button 的根元素绑定了 click 事件
+<Button @click.native='change' />
+```
+
+##### 列表渲染
+
+将一组数据循环渲染到页面上，需要使用指令 `v-for`
+循环渲染分两种情况
+
+- 带数据的(data)
+
+```html
+<!-- item in arrList  就相当于遍历数组 arrList， item 代表每一项，想要使用下标的话 (item,index) in arrList -->
+<!-- key 属性是必须的，而且该循环下唯一 -->
+<li v-for="item in arrList" :key="唯一值">{{item}}</li>
+```
+
+- 就是循环很多次，不需要 data ，这种很少见
+
+```html
+<!-- 循环 10 次 -->
+<li v-for="item in 10" :key="唯一值">{{item}}</li>
+```
+
+##### 条件渲染
+
+使用两个指令
+
+- v-show 样式的消失和出现，消失出现次数比较频繁使用
+  ```html
+  <div v-show="!isHas">
+    <img src="https://www.17qq.com/img_biaoqing/12848853.jpeg" alt="" />
+  </div>
+  <div v-show="isHas">显示很多图片</div>
+  ```
+- v-if 可能搭配 v-else v-else-if 消失出现次数比较少使用
+  ```html
+  <!-- 需要注意 if else elseif 使用的时候必须紧跟着中间不允许出现其他元素，而且该指令对应的元素都是兄弟元素 -->
+  <div v-if="!isHas">
+    <img src="https://www.17qq.com/img_biaoqing/12848853.jpeg" alt="" />
+  </div>
+  <div v-else>显示很多图片</div>
+  ```
+
+如果图片的 src 地址写成了 js 相关的值 ，那么图片不会解析到浏览器上
+解决方案
+
+- 1.换成网络地址 推荐
+- 2.将 js 生成的图片地址使用 require(js 地址) ，只能在下面的 script 标签中使用
+
+##### style 和 class 绑定
+
+styel 行内样式 和 class 名在 vue 组件内的多种写法，其实就是为了更简单的去实现样式的修改
+
+style 绑定
+
+- 默认的字符串方式
+  ```html
+  <div
+    :style="`background-color: ${isActive ? 'active' : ''}`"
+    class="box"
+  ></div>
+  ```
+- 对象表示法
+  ```html
+  <!-- 1.style 对象表示法，有点像之前 jquery 的 css 的修改多个样式的方法 -->
+  <div
+    :style="{ 'background-color': isActive ? '#00b3d4' : '#ccc' }"
+    class="box"
+  ></div>
+  ```
+- 数组表示法（不怎么用）
+
+class 绑定
+
+- 默认的字符串方式
+  ```html
+  <div :class="`box ${isActive ? 'active' : ''}`"></div>
+  ```
+- 对象表示法
+  ```html
+  <div :class="{ box: true, active: isActive }"></div>
+  ```
+- 数组表示法 (老师用的较多)
+  ```html
+  <div :class="['box', isActive ? 'active' : '']"></div>
+  ```
+- 数组内嵌套对象表示法 (老师用到较多)
+  ```html
+  <div :class="['box', { active: isActive }]"></div>
+  ```
+
+###### vue 的表单
+
+vue 将表单的输入(文本)绑定成组件的 data ，用组件的 data 去控制，vue 提倡使用 v-model 指令去实现表单的绑定，我们也可以使用 value 配合 input 或者 change 事件替代 v-model 指令
+v-model 指令的修饰符
+
+- .lazy 实现懒加载将 v-model 的默认事件 input 改成 change
+- .number 自动将输入的值使用 parseFloat() 转化成数字类型
+- .trim 自动将输入的值的左右空白去掉
+
+##### vue 的计算属性
+
+你想对一个 data 进行复杂的逻辑操作后放在页面上展示，此时我们可以直接将复杂的操作写在模板的语法内，后者使用函数操作之后返回想要的内容想要的值，但是 vue 组件提供了更好的方法就是组件的计算属性 (computed)
+
+```js
+// 计算属性就是一个函数，该函数必须返回一个值，这个值就是计算属性
+computed: {
+    typeList() {
+      return this.arr.reduce((res, item) => {
+        if (!res.includes(item.category)) {
+          res.push(item.category);
+        }
+        return res;
+      }, []);
+    },
+  },
+```
+
+##### 组件间的通信
+
+父子组件
+
+- 使用 props ， props 一般用来传递值，也可以传递函数，一般不使用
+- 自定义事件 ， 向子组件传递的是函数, 一般是当父组件的 data 想要子组件修改时使用
+
 ###### 小问题
 
 - gitbash 不可用，使用 powershell 运行 `vue ui` 提示

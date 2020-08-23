@@ -1,0 +1,36 @@
+<template>
+  <div v-if="goodsList.length" class="goods-list">
+    <h3>{{ goodsType }}</h3>
+    <ul>
+      <GoodsItem v-for="item in goodsList" :key="item.id" :goods="item" />
+    </ul>
+  </div>
+</template>
+
+<script>
+import GoodsItem from "./GoodsItem";
+export default {
+  name: "GoodsList",
+  components: {
+    GoodsItem,
+  },
+  props: ["goodsType", "goodsList"],
+};
+</script>
+
+<style>
+.goods-list {
+  margin-top: 20px;
+  width: 100%;
+}
+.goods-list ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+/* .goods-list ul li span {
+  width: 50%;
+  display: block;
+  float: left;
+} */
+</style>
