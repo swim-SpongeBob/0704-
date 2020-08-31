@@ -5,6 +5,7 @@
       :key="product.id"
       :product="product"
       @changeQuantity="changeQuantity"
+      @change-checked="changeChecked"
     />
   </div>
 </template>
@@ -13,7 +14,7 @@
 import CartProduct from "./CartProduct";
 export default {
   name: "CartProductList",
-  props: ["products", "changeQuantity"],
+  props: ["products", "changeQuantity", "changeChecked"],
   components: {
     CartProduct,
   },
