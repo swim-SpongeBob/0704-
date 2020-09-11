@@ -67,9 +67,7 @@ App.vue 只剩下
 
 ```vue
 <template>
-  <div id="app">
-    hello world
-  </div>
+  <div id="app">hello world</div>
 </template>
 
 <script>
@@ -437,6 +435,30 @@ this.$refs.btnDom;
 
 - methods 将函数设置成普通函数，该函数的跟作用域下的 this 就是组件实例，如果跟作用域内的娶她子作用域想要直接访问 this 那么请设置成`箭头函数`。
 - computed 和上面 methods 一样
+- 生命周期函数跟上面一样
+
+##### 组件的生命周期
+
+主要是 data.json 和 假的 gif 的使用 例子在 vue-lifecycle.vue 中
+
+组件从出现到渲染页面或者再页面中销毁，各个阶段 vue 都提供了对应的函数，供开发者使用，这些函数被称作生命周期钩子，生命周期钩子是同步函数，
+
+初始渲染阶段
+
+- beforeCreate
+- created : data 等其他组件的数据处理完毕，可以在页面初始的时候发送请求更新数据
+- beforeMount
+- mounted： 组件在页面渲染完毕，可以获取组件内的真实 dom 节点
+
+数据更新阶段
+
+- beforeUpdate 数据更新时调用，发生虚拟 dom 打补丁之前
+- updated 数据更新完毕，dom 渲染完毕
+
+组件的销毁阶段
+
+- beforeDestory 组件即将被销毁，并不是组件的内容在页面上消失
+- destoryed 组件销毁完毕，我们在这个生命周期内，可以手动解除一些跟该组件无关的一些操作（setInterval 跟浏览器相关的一些事情）
 
 ##### 组件间的通信
 
@@ -445,8 +467,9 @@ this.$refs.btnDom;
 - 使用 props ， props 一般用来传递值，也可以传递函数，一般不使用
 - 自定义事件 ， 向子组件传递的是函数, 一般是当父组件的 data 想要子组件修改时使用
 - 给子组件设置 ref
-
-兄弟组件
+- 父组件内使用 \$children 可以获取所有子组件的实例组成的数组
+- 子组件内使用 \$parent 获取组件实例
+  兄弟组件
 
 - 将兄弟间需要相互使用的 data 共享的到父组件内，那么兄弟之间的交互就变成了父子之前的交互了
 
