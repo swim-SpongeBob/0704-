@@ -168,6 +168,13 @@ export default {
     <button v-bind:style="`background-color: ${color}`"></button>
     ```
 
+###### vue 组件的插槽
+
+当父组件使用子组件的时候，向子组件的开始和结束标签之间传递内容，我们将这个内容称为插槽(slot)
+
+- 普通插槽
+- 具名插槽，语法的简写
+
 ##### vue 的模板语法
 
 我们在介绍 props 的时候就已经使用了 vue 的模板语法，在 template 中嵌入 js ，
@@ -412,6 +419,57 @@ computed: {
   },
 ```
 
+用法和 data 一致
+
+当你的一个计算属性想要实现反向操作的时候，意思就是直接给计算属性重新赋值，然后让计算属性的来源 data 被修改。此时可以给计算属性设置 setter ,代码如下
+
+```js
+// firstName 和 lastName 是组件的 data
+// 当计算属性存在 setter 的时候计算属性就写成了 对象类型
+computed: {
+    fullName: {
+      get() {
+        return this.firstName + " " + this.lastName;
+      },
+      set(newValue) {
+        // newValue 代表新的计算属性 或者叫更改之后的计算属性
+        // setter 用来修改计算属性的来源 data 的
+        this.firstName = newValue.split(" ")[0];
+        this.lastName = newValue.split(" ")[1];
+      }
+    }
+  },
+```
+
+###### vue 组件的侦听器 watch
+
+当你的计算属性需要根据异步操作来计算，但是计算属性函数内要直接返回结果，不能添加异步操作。所以可以使用 watch 实现。
+使用案例
+
+```js
+// question 和 answer 是组件的 data，answer 要随着 question 的变化而变化，但是如何变化要发送请求才知道
+// watch 对象下有几个属性
+// 第一个 handler 是数据变化的触发的函数
+// 第二个 immediate 在组件初始化的时候就执行一次 handler
+// 第三个 deep 为了发现对象内部值的变化，可以在选项参数中指定 deep: true。
+watch: {
+    question: {
+      // 监听 question 修改 answer
+      handler() {
+        // 当 question 发生变化是就会执行
+        if (this.question) {
+          setTimeout(() => {
+            // 向后台获取答案
+            this.answer = Math.random();
+          }, 100);
+        }
+      },
+      // 进入页面就执行一次
+      immediate: true
+    }
+  }
+```
+
 ##### vue 组件的 ref
 
 当你想在 vue 组件内获取一个元素的真实 dom 结构的时候，可以使用原生方案 document 一套， 也可以借助插件（没讲），但是呢，vue 其实提供了一个方案，就是组件的 ref。
@@ -460,20 +518,136 @@ this.$refs.btnDom;
 - beforeDestory 组件即将被销毁，并不是组件的内容在页面上消失
 - destoryed 组件销毁完毕，我们在这个生命周期内，可以手动解除一些跟该组件无关的一些操作（setInterval 跟浏览器相关的一些事情）
 
+##### 动态组件
+
+当你想要根据一个数据切换不同组件的展示，此时可以使用动态组件，动态组件是由 vue 的自带 component 元素搭配 is 属性代码如下， 动态组件的切换方式是属于 v-if 的切换
+
+```html
+<!-- currentComponentName属性 属性的值需要和组件名相同 -->
+<!-- 当修改 currentComponentName属性 的时候就会切换不同的组件展示了  -->
+<component :is="currentComponentName"><component /></component>
+```
+
+动态组件搭配 keep-alive 实现动态组件的数据缓存
+当动态组件切换的时候每个组件默认都会变成初始状态，假如有的组件内有 data 并且希望 data 修改的时候能够保留，意思就是动态组件切换的时候中间的某个组件的 data 不会被初始化，此时就需要使用 keep-alive
+
+```html
+<keep-alive include="Home" exclude="Home" :max="10">
+  <!-- includes 属性的属性值可以是字符串或者正则，匹配的组件名才缓存数据 -->
+  <!-- exclude 与 include 相反 -->
+  <!-- max 最多缓存的组件实例个数  待定 -->
+  <component :is="currentComponentName"></component>
+</keep-alive>
+```
+
+###### vue 自带的动画和过渡效果
+
+vue 本身自带了一个 transition 组件，使用该组件配合一些样式就可以实现进入 or 离开的过渡或者动画效果
+
+- v-enter：定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移除。
+- v-enter-active：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。
+- v-enter-to：2.1.8 版及以上定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter 被移除)，在过渡/动画完成之后移除。
+- v-leave：定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一帧被移除。
+- v-leave-active：定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数。
+- v-leave-to：2.1.8 版及以上定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效 (与此同时 v-leave 被删除)，在过渡/动画完成之后移除。
+
+###### vue 的路由 vue-router
+
+对于 vue 这种单页面应用，官方提供了 vue-router 库，来实现多页的效果。
+如何实现
+
+创建
+
+- 安装 vue-router 包
+- 新建 router.js 里面创建路由
+  - 导入页面所有需要的页面组件
+  - 根据页面组件创建路由数组
+  - 创建 vue 路由实例
+- 在 main.js 导入创建好的路由实例，加入到整个 vue 项目中
+
+使用
+
+需要用 Vue.use(VueRouter) 将 vue-router 内的自带组件制作成 vue 的插件，也就是说在整个 vue 项目中可以随意使用 vue-router 内的自带组件了
+router-view 组件代表整个路由，使用 router-link 组件进行路由跳转
+快速创建路由方式(前提是 vue 的环境时 vue-cli3.0 以上)
+
+- 使用 vue ui 安装插件，选择安装 vue-router 的插件
+- 使用命令行工具 执行 `vue add vue-router`
+
+快速安装之后，项目内就会自带一个路由 demo，直接使用即可
+
+对于 router-view 和 router-link 组件的各种配置参考 [vue-router 官方文档](https://router.vuejs.org/zh/)
+
+###### vue-router 进阶
+
+导航守卫
+路由跳转的时候会默认触发的一些函数，帮助开发者更好的实现路由的跳转。
+
+- 全局前置守卫
+- 全局解析守卫
+- 全局后置钩子
+- 路由独享守卫
+- 组件内的守卫
+
+过渡动效
+其实就是使用 vue 自带的 transition 组件实现过渡效果
+
+数据获取(异步)
+
+- 组件的生命周期内获取
+- 组件的路由守卫内获取
+
+一般在组件内获取数据
+
+滚动行为
+就是在创建路由实例的时候添加一个 scrollBehavior 方法。
+
 ##### 组件间的通信
 
 父子组件
 
 - 使用 props ， props 一般用来传递值，也可以传递函数，一般不使用
 - 自定义事件 ， 向子组件传递的是函数, 一般是当父组件的 data 想要子组件修改时使用
+  - 当你要实现子组件同步父组件的 data 时，一般采取父组件内定义事件传递给子组件执行的方案，此方案可以使用 .sync 修饰符简化
+    自定义事件的基础写法，组件名写成 update:title
+    父组件内的两种自写法
+  ```html
+  <!-- 还有一种就是将事件函数定义在父组件内的 methods 内 -->
+  <!-- 下面的这个写法 $event 代表的就是子组件调用函数传递的参数 -->
+  <Box :title="title" @update:title="title = $event"></Box>
+  ```
+  简化
+  ```html
+  <!-- 上面写法的语法糖 -->
+  <Box :title.sync="title"></Box>
+  ```
+  子组件内
+  ```js
+  this.$emit("update:title", "新的值");
+  ```
 - 给子组件设置 ref
 - 父组件内使用 \$children 可以获取所有子组件的实例组成的数组
 - 子组件内使用 \$parent 获取组件实例
-  兄弟组件
+- 插槽(slot)
+- 在组建上使用 v-model 指令，其实就是相当于将 props(:value) 和 自定义事件 (@input) 简化了. input 事件就是修改 value 的方法
+
+兄弟组件
 
 - 将兄弟间需要相互使用的 data 共享的到父组件内，那么兄弟之间的交互就变成了父子之前的交互了
 
 vuex 解决任何组件间的交互
+
+###### vue 的常用 ui 库，element-ui
+
+普通的安装方式
+
+- 安装 `npm i element`
+- 使用
+  - 完全引入(不推荐)，直接将 element-ui 和他的 css 导入到 main.js，并且使用 Vue.use 方法将 element-ui 的所有组件，创建成项目全局的组件
+  - 按需引入
+    - 安装 babel-plugin-component 插件，辅助按需引入
+    - 在项目根目录下的 .babel.config.js 添加一项 plugins 配置
+    - 在 main.js 中导入所需要的组件，并使用 Vue.use 方法组件创建成项目全局的组件
 
 ###### 小问题
 

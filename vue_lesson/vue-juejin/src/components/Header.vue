@@ -1,0 +1,68 @@
+<template>
+  <header>
+    <!-- router-link 的激活匹配方案是包含匹配 -->
+    <!-- 使用的默认的激活类名 -->
+    <span @click="goHome" to="/" class="logo"
+      ><img
+        src="https://s3.pstatp.com/toutiao/xitu_juejin_web/img/logo.a7995ad.svg"
+        alt=""
+    /></span>
+    <router-link
+      to="/"
+      :class="$route.path !== '/feidian' ? 'router-link-active' : '/'"
+      exact
+      >首页</router-link
+    >
+    <router-link to="/feidian">沸点</router-link>
+    <!-- active-class 设置激活的类名 -->
+    <!-- <router-link to="/" active-class="active" exact>首页</router-link> |
+      <router-link to="/pins" active-class="active">沸点</router-link> -->
+  </header>
+</template>
+
+<script>
+export default {
+  name: "Header",
+  methods: {
+    goHome() {
+      // console.log(this.$route);
+      // this.$router.push("/backend?sort=newest");
+      // query 是查询  params 是动态参数
+      // this.$router.push({ path: "/backend", query: { sort: "newest" } });
+      this.$router.push({
+        name: "postList",
+        params: { type: "backend" },
+        query: { sort: "newest" },
+      });
+    },
+  },
+};
+</script>
+
+<style>
+header {
+  /* width: 800px; */
+  height: 50px;
+  line-height: 50px;
+  background-color: #fff;
+  padding: 0 100px;
+  overflow: hidden;
+}
+header > .logo {
+  margin-right: 50px;
+  float: left;
+}
+header a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  float: left;
+  margin-left: 30px;
+}
+/* #app .active {
+  color: #007fff;
+} */
+header .router-link-active {
+  color: #42b983;
+}
+</style>
